@@ -93,16 +93,18 @@ fn run(
 }
 
 fn ui(frame: &mut Frame, state: &State) {
-    let vertical = Layout::vertical([Constraint::Length(1), Constraint::Min(3)]);
-    let [description_area, input_area] = vertical.areas(frame.size());
-
-    let description = Paragraph::new(Text::from(Line::from(vec![state
+    let text: Vec<Line> = state
         .description
-        .clone()
-        .into()])));
+        .split("%0A")
+        .map(|l| Line::from(vec![l.into()]))
+        .collect();
+
+    let vertical = Layout::vertical([Constraint::Length(text.len() as u16), Constraint::Length(3)]);
+    let [description_area, input_area] = vertical.areas(frame.size());
+    let description = Paragraph::new(text).wrap(Wrap { trim: true });
     frame.render_widget(description, description_area);
 
-    let input = Paragraph::new(state.input.as_str().replace('.', "*"))
+    let input = Paragraph::new("*".repeat(state.input.len()))
         .style(Style::default())
         .block(Block::bordered().title(" ".to_owned() + &state.prompt + " "));
     frame.render_widget(input, input_area);

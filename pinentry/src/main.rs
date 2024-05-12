@@ -82,7 +82,7 @@ fn getpin(state: &State) -> Option<String> {
         .env("TMP_FILE", path.clone())
         .arg("--class")
         .arg("kitty-pinentry")
-        .arg("/home/michael/Projects/pinentry/target/debug/terminal")
+        .arg("pinentry-terminal-client")
         .output()
     {
         Ok(_) => {
