@@ -38,7 +38,7 @@ impl Request {
                 ],
                 GetinfoRequest::Version => vec![
                     Response::D {
-                        data: String::from("1.0"),
+                        data: env!("CARGO_PKG_VERSION").to_owned(),
                     },
                     Response::Ok,
                 ],
@@ -50,7 +50,7 @@ impl Request {
                 ],
                 GetinfoRequest::Pid => vec![
                     Response::D {
-                        data: String::from("1"),
+                        data: process::id().to_string(),
                     },
                     Response::Ok,
                 ],
