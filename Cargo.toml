@@ -1,5 +1,3 @@
 [workspace]
-members = [
-  "pinentry",
-  "terminal",
-]
+members = ["pinentry", "terminal"]
+resolver = "2"

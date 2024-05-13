@@ -96,7 +96,7 @@ fn ui(frame: &mut Frame, state: &State) {
     let text: Vec<Line> = state
         .description
         .split("%0A")
-        .map(|l| Line::from(vec![l.into()]))
+        .map(|l| Line::from(vec![l.bold().blue()]))
         .collect();
 
     let vertical = Layout::vertical([Constraint::Length(text.len() as u16), Constraint::Length(3)]);
