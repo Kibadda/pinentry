@@ -99,7 +99,7 @@ fn ui(frame: &mut Frame, state: &State) {
         .map(|l| Line::from(vec![l.bold().blue()]))
         .collect();
 
-    let vertical = Layout::vertical([Constraint::Length(text.len() as u16), Constraint::Length(3)]);
+    let vertical = Layout::vertical([Constraint::Min(text.len() as u16), Constraint::Length(3)]);
     let [description_area, input_area] = vertical.areas(frame.size());
     let description = Paragraph::new(text).wrap(Wrap { trim: true });
     frame.render_widget(description, description_area);
