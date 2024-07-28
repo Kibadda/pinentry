@@ -12,12 +12,16 @@ use crate::{
 fn main() -> Result<(), Error> {
     let mut state = State::default();
 
+    std::process::Command::new("dunstify").arg("starting").output()?;
+
     println!("{}", Response::Ok);
 
     loop {
         let mut input = String::new();
 
         stdin().read_line(&mut input)?;
+
+        std::process::Command::new("dunstify").arg(&input).output()?;
 
         match Request::from_str(&input) {
             Ok(command) => {
@@ -28,7 +32,10 @@ fn main() -> Result<(), Error> {
                     true => break,
                 }
             }
-            Err(_) => break,
+            Err(_) => {
+                std::process::Command::new("dunstify").arg(&input).output()?;
+                break
+            },
         }
     }
 
