@@ -140,7 +140,7 @@ fn getpin(state: &State) -> Result<Vec<Response>, Box<dyn Error>> {
         .env("TMP_FILE", path.clone())
         .arg("--class")
         .arg("kitty-pinentry")
-        .arg("pinentry-terminal-client")
+        .arg("pinentry-minimal-terminal")
         .output()
     {
         Ok(_) => {
