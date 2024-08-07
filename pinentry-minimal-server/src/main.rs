@@ -19,6 +19,8 @@ fn main() -> Result<(), Error> {
 
         stdin().read_line(&mut input)?;
 
+        std::process::Command::new("dunstify").arg(&input).output()?;
+
         match Request::from_str(&input) {
             Ok(command) => {
                 let messages = command.handle(&mut state);
