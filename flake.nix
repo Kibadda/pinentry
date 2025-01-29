@@ -1,25 +1,63 @@
 {
   inputs = {
-    naersk.url = "github:nix-community/naersk/master";
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    utils.url = "github:numtide/flake-utils";
+    flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs, utils, naersk }:
-    utils.lib.eachDefaultSystem (system:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      flake-utils,
+    }:
+    let
+      overlay = final: prev: {
+        kibadda = (prev.kibadda or { }) // {
+          pinentry = final.pkgs.rustPlatform.buildRustPackage {
+            name = "pinentry";
+            cargoHash = "sha256-0dbS40fLFXWES8JGQNTqKiVbF5fOM3gwzdZCE3C0QpI=";
+            src = self;
+            meta.mainProgram = "pinentry-minimal-server";
+          };
+        };
+      };
+
+      supportedSystems = [
+        "x86_64-linux"
+        "aarch64-linux"
+      ];
+    in
+    flake-utils.lib.eachSystem supportedSystems (
+      system:
       let
-        pkgs = import nixpkgs { inherit system; };
-        naersk-lib = pkgs.callPackage naersk { };
+        pkgs = import nixpkgs {
+          inherit system;
+          overlays = [
+            overlay
+          ];
+        };
       in
       {
-        defaultPackage = naersk-lib.buildPackage {
-          src = ./.;
-          meta.mainProgram = "pinentry-minimal-server";
+        packages = rec {
+          default = pinentry;
+          inherit (pkgs.kibadda) pinentry;
         };
-        devShell = with pkgs; mkShell {
-          buildInputs = [ cargo rustc rustfmt pre-commit rustPackages.clippy ];
-          RUST_SRC_PATH = rustPlatform.rustLibSrc;
+
+        devShells = {
+          default = pkgs.mkShell {
+            name = "pinentry-development-shell";
+            buildInputs = with pkgs; [
+              cargo
+              rustc
+              rustfmt
+              rustPackages.clippy
+            ];
+            RUST_SRC_PATH = pkgs.rustPlatform.rustLibSrc;
+          };
         };
       }
-    );
+    )
+    // {
+      overlays.default = overlay;
+    };
 }
