@@ -15,7 +15,7 @@
         kibadda = (prev.kibadda or { }) // {
           pinentry = final.pkgs.rustPlatform.buildRustPackage {
             name = "pinentry";
-            cargoHash = "sha256-LBGW560D7x5u+YCxsKnUPL9LzqPmDJ9ggElWYbJrATc=";
+            cargoHash = "sha256-s/A62R+bPif4zqq0YuvqMRRdsmIvDRMaw7j07tW4P1k=";
             src = self;
             meta.mainProgram = "pinentry-minimal-server";
           };
